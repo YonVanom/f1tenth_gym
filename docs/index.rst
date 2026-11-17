@@ -86,6 +86,7 @@ https://f1tenth.org/build.html.
 
    rl
    rendering
+   splat_camera
    examples
 
 .. toctree::
