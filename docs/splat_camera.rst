@@ -44,8 +44,8 @@ in the optional ``splat`` extra:
 
 A git checkout includes one scene, ``hallway_loop_2b`` (a real 62 m hallway loop,
 recorded in both directions), and the scanned RoboRacer as the ``car`` asset, in
-``splat_data/``; they are found by name. Other scenes and assets are folders: pass their
-paths, or put them under ``$ROBORACER_DATA`` (default ``~/roboracer_data``) as
+``splat_data/``; they are found by name. Other scenes and assets are folders: pass
+their paths, or put them under ``$ROBORACER_DATA`` (default ``~/roboracer_data``) as
 ``scenes/<name>`` and ``assets/<name>``, which is searched first. The data is not part of
 the installed wheel. Without a car asset the other cars are not drawn.
 
