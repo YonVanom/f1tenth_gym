@@ -43,7 +43,7 @@ dependencies: it asks for ``opencv-python-headless``, which conflicts with the g
 .. code-block:: bash
 
    uv sync
-   uv pip install "wgpu>=0.20" "gdown>=5"
+   uv pip install "wgpu>=0.20"
    uv pip install --no-deps -e /path/to/roboracer_3dgs_sim   # or the git URL
 
 The scene ``hallway_loop_2b`` is bundled with roboracer_3dgs_sim.
