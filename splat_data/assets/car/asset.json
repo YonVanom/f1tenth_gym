@@ -1,0 +1,59 @@
+{
+ "format": "roboracer/asset",
+ "version": 1,
+ "name": "car",
+ "kind": "car",
+ "class": "car",
+ "created": "2026-11-13T15:16:39",
+ "description": "scanned 1/10 RoboRacer (the real car): 186 photos (Panasonic GM1), COLMAP + 3DGUT, metric scale and floor from 4 ChArUco sheets; colours scaled to the hallway lighting; rear axle origin",
+ "frame": "asset frame: x forward, y left, z up, metres; origin on the floor, below the rear axle (kind car) or at the footprint centre (kind static)",
+ "footprint": [
+  [
+   -0.086415,
+   -0.135367
+  ],
+  [
+   0.412936,
+   -0.135367
+  ],
+  [
+   0.412936,
+   0.140934
+  ],
+  [
+   -0.086415,
+   0.140934
+  ]
+ ],
+ "height_m": 0.22630499303340912,
+ "splat": {
+  "file": "splat.bin",
+  "count": 41906,
+  "sh_degree": 3,
+  "background": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "kernel": {
+   "min_response": 0.0113,
+   "min_alpha": 0.00392,
+   "max_alpha": 0.99,
+   "min_transmittance": 0.0001
+  },
+  "layout": "little endian, no header: position f32 (N,3), scale f32 (N,3), rotation f32 (N,4) wxyz, density f32 (N,), sh f16 (N,48) coefficient-major; as a scene splat.bin, in the asset frame",
+  "sha256": "3516ea7fd7370983458dc20b43dbf71e34309a8218ac20c7b143b8373b8be4f7"
+ },
+ "source": {
+  "method": "photo scan, COLMAP SfM, 3DGUT (3dgrut), cropped and re-centred",
+  "scan": "car_gm1 (2026-11-13)",
+  "wheelbase_m": 0.3216,
+  "colour_gain_rgb": [
+   0.544,
+   0.575,
+   0.559
+  ],
+  "colour_gain_note": "fit from GM1 RAW photos of the car in the hallway vs the hallway splat walls",
+  "shadow": true
+ }
+}

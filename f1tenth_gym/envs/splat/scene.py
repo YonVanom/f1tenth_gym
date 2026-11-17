@@ -13,7 +13,9 @@ An **asset** (another car drawn into the images) is a folder with ``asset.json``
 in the same splat layout, its frame at the rear axle (x forward, y left, z up from the floor).
 
 Everything is in the scene's world frame (metres, z up). Names are looked up under
-``$ROBORACER_DATA`` (default ``~/roboracer_data``): ``scenes/<name>`` and ``assets/<name>``.
+``$ROBORACER_DATA`` (default ``~/roboracer_data``): ``scenes/<name>`` and ``assets/<name>``, then
+in the repository's ``splat_data/`` (a git checkout ships the ``hallway_loop_2b`` scene and the
+``car`` asset there; they are not part of the wheel).
 Ported from roboracer_3dgs_sim (scene.py, track.py, camera.py, assets.py).
 """
 from __future__ import annotations
@@ -36,16 +38,22 @@ def data_root() -> pathlib.Path:
     return pathlib.Path(os.environ.get("ROBORACER_DATA", "~/roboracer_data")).expanduser()
 
 
+REPO_DATA = pathlib.Path(__file__).resolve().parents[3] / "splat_data"
+"""The scene and car asset shipped with a git checkout (absent from an installed wheel)."""
+
+
 def _find(name_or_path, kind: str, marker: str) -> pathlib.Path:
     path = pathlib.Path(name_or_path).expanduser()
     if path.name == marker:
         path = path.parent
     if (path / marker).exists():
         return path
-    candidate = data_root() / kind / str(name_or_path)
-    if (candidate / marker).exists():
-        return candidate
-    raise FileNotFoundError(f"no {kind[:-1]} {name_or_path!r}: neither {path} nor {candidate} has a {marker}")
+    candidates = [data_root() / kind / str(name_or_path), REPO_DATA / kind / str(name_or_path)]
+    for candidate in candidates:
+        if (candidate / marker).exists():
+            return candidate
+    tried = ", ".join(str(c) for c in [path, *candidates])
+    raise FileNotFoundError(f"no {kind[:-1]} {name_or_path!r} (looked for {marker} in {tried})")
 
 
 # ----------------------------------------------------------------------------- camera geometry

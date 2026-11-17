@@ -1,0 +1,60 @@
+{
+ "format": "roboracer/scene",
+ "version": 1,
+ "name": "hallway_loop_2b",
+ "created": "2026-11-10T18:17:06-05:00",
+ "description": "Gaussian splat of a real hallway loop (1/10-scale RoboRacer track), 3DGUT, with the track (floor, walls, racelines) fitted to the same lidar map.",
+ "world_frame": "map frame of the capture (GLIM), metres, z up",
+ "splat": {
+  "file": "splat.bin",
+  "count": 405366,
+  "sh_degree": 3,
+  "background": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "kernel": {
+   "min_response": 0.0113,
+   "min_alpha": 0.00392156862745098,
+   "max_alpha": 0.99,
+   "min_transmittance": 0.0001
+  },
+  "layout": "little endian: float32 position (N,3), float32 scale (N,3), float32 quaternion w x y z (N,4), float32 density (N,), float16 SH (N,48) [k*3 + c]",
+  "sha256": "938836ebc9fcabbc481891319c0b2505f40bafdf88f13e5d57d6e1b054ce5039"
+ },
+ "track": {
+  "file": "track.npz",
+  "obstacles": "cells with sensor-mesh surface 0.03-0.40 m above the floor (for drivable-mask occlusion)",
+  "lines": [
+   "centre",
+   "mincurv",
+   "centrem04",
+   "centrem02",
+   "centrep02",
+   "centrep04"
+  ],
+  "default_line": "centre",
+  "line_spacing_m": 0.1,
+  "sha256": "9343f7b5f989dbd78b9fe51d7e07359491396a4e5037f8be718d7e6eb7980bb5"
+ },
+ "camera": {
+  "mount": {
+   "forward_m": 0.27,
+   "left_m": 0.025,
+   "height_m": 0.158,
+   "pitch_deg": 0.0,
+   "roll_deg": 0.0
+  },
+  "note": "P (ground below the optical centre) is forward/left of the rear axle; height above the floor measured from the capture poses"
+ },
+ "coverage": {
+  "sigma_xy_m": 0.3,
+  "sigma_z_m": 0.05,
+  "sigma_yaw_deg": 25.0,
+  "quality_min": 0.45
+ },
+ "source": {
+  "built_by": "roboracer_3dgs_builder (track bundle of a recording with the RoboRacer car: ZED X Mini + Livox Mid-360)"
+ }
+}
