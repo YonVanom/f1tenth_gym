@@ -2,7 +2,7 @@
 
 Exports the roboracer_3dgs_sim scene's track as a gym map (once), wraps the environment with
 SplatCameraWrapper and drives two cars with pure pursuit on the scene's raceline (the second one
-slower, starting ahead; the ego keeps its distance). Writes a video of the ego car's camera (20 Hz)
+at 70 % of the raceline speed, starting ahead; the ego at 80 %, keeping its distance). Writes a video of the ego car's camera (20 Hz)
 combined with the gym's own 2D renderer:
 
     --layout side      the camera next to the 2D view following the ego car
@@ -103,17 +103,21 @@ def main():
     writer = cv2.VideoWriter(out, cv2.VideoWriter_fourcc(*"mp4v"), FPS, (first.shape[1], first.shape[0]))
     dt = env.unwrapped.timestep
     every = max(1, int(round(1.0 / FPS / dt)))
+    resets, crashes, speeds = 0, 0, []
     for k in range(int(a.seconds / dt)):
         poses = env.unwrapped.sim.state.poses
         action = np.zeros((2, 2), np.float32)
-        action[0] = pure_pursuit(poses[0], waypoints, 1.2, wb, 0.7)
-        action[1] = pure_pursuit(poses[1], waypoints, 1.0, wb, 0.4)
-        # The ego keeps its distance: within 2 m behind the other car it matches its speed.
+        action[0] = pure_pursuit(poses[0], waypoints, 1.2, wb, 0.8)
+        action[1] = pure_pursuit(poses[1], waypoints, 1.2, wb, 0.7)
+        # The ego keeps its distance: within 2 m behind the other car it matches its speed,
+        # slower only when closer than 1 m.
         gap = poses[1][:2] - poses[0][:2]
         ahead = np.dot(gap, [np.cos(poses[0][2]), np.sin(poses[0][2])]) > 0
         if ahead and np.linalg.norm(gap) < 2.0:
-            action[0, 1] = min(action[0, 1], action[1, 1] * np.linalg.norm(gap) / 2.0)
+            factor = float(np.clip((np.linalg.norm(gap) - 0.6) / 0.4, 0.0, 1.0))
+            action[0, 1] = min(action[0, 1], action[1, 1] * factor)
         obs, reward, terminated, truncated, info = env.step(action)
+        speeds.append(float(env.unwrapped.sim.state.standard_state[0, 3]))
         view = env.render()                           # the gym grabs a new 2D frame at render_fps
         if k % every == 0:
             frame = compose(obs["agent_0"]["image"], view, a.layout)
@@ -122,10 +126,13 @@ def main():
             label(frame, f"3DGS camera   t {k * dt:5.1f} s   v {v:4.1f} m/s   render quality {q:.2f}")
             writer.write(frame)
         if terminated or truncated:
+            resets += 1
+            crashes += int(np.any(env.unwrapped.sim.state.collisions > 0))
             obs, info = env.reset(seed=k)
     writer.release()
     env.close()
-    print(f"wrote {out}")
+    print(f"wrote {out} ({resets} episode resets, {crashes} of them collisions; ego mean speed {np.mean(speeds):.1f} m/s, "
+          f"max {np.max(speeds):.1f} m/s)")
 
 
 if __name__ == "__main__":
