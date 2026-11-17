@@ -1,6 +1,6 @@
 """Camera frames from a Gaussian splat of a real hallway, physics and 2D view from f1tenth_gym.
 
-Exports the roboracer_3dgs_sim scene's track as a gym map (once), wraps the environment with
+Exports a scene bundle's track as a gym map (once), wraps the environment with
 SplatCameraWrapper and drives two cars with pure pursuit on the scene's raceline (the second one
 at 70 % of the raceline speed, starting ahead; the ego at 80 %, keeping its distance). Writes a video of the ego car's camera (20 Hz)
 combined with the gym's own 2D renderer:
@@ -10,8 +10,9 @@ combined with the gym's own 2D renderer:
 
     xvfb-run -a uv run python examples/splat_camera.py --layout side --seconds 30
 
-The 2D renderer is OpenGL and needs an X display (``xvfb-run`` gives a virtual one). Needs
-roboracer_3dgs_sim installed in the same environment (docs/splat_camera.rst).
+The 2D renderer is OpenGL and needs an X display (``xvfb-run`` gives a virtual one). The camera
+needs the ``splat`` extra (``uv sync --extra splat``) and the scene under $ROBORACER_DATA/scenes or
+as a path (docs/splat_camera.rst).
 """
 import argparse
 import pathlib

@@ -1,7 +1,8 @@
 """Splat camera support (f1tenth_gym.envs.splat): track export and the camera wrapper.
 
 The exporter is tested on a synthetic scene bundle (no renderer needed). The wrapper test needs
-roboracer_3dgs_sim, its bundled hallway scene and a renderer device; it is skipped otherwise.
+wgpu (the ``splat`` extra), the hallway_loop_2b scene under $ROBORACER_DATA/scenes and a renderer
+device; it is skipped otherwise.
 """
 import json
 import pathlib
@@ -75,11 +76,12 @@ class TestTrackExport(unittest.TestCase):
 class TestSplatCameraWrapper(unittest.TestCase):
     def setUp(self):
         try:
-            import roboracer_3dgs_sim  # noqa: F401
-            from roboracer_3dgs_sim.scene import scene_dir
-            scene_dir("hallway_loop_2b")
-        except Exception as ex:  # not installed, or no scene
-            self.skipTest(f"roboracer_3dgs_sim / hallway_loop_2b not available: {ex}")
+            import wgpu  # noqa: F401
+
+            from f1tenth_gym.envs.splat import SplatScene
+            SplatScene("hallway_loop_2b")
+        except Exception as ex:  # no wgpu, or no scene
+            self.skipTest(f"wgpu / the hallway_loop_2b scene not available: {ex}")
 
     def test_images_in_observations(self):
         import gymnasium as gym

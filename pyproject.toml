@@ -49,6 +49,8 @@ video = ["moviepy>=1.0.0"]                          # gymnasium RecordVideo back
 trackgen = ["shapely>=2.0", "matplotlib>=3.8.2,<4"] # examples/random_trackgen.py
 # End-to-end native JAX training example; no trainer framework is required.
 train = ["flax>=0.12,<0.13", "optax>=0.2.8,<0.3"]
+# Camera frames rendered from Gaussian-splat scenes (f1tenth_gym.envs.splat): the WebGPU renderer.
+splat = ["wgpu>=0.20"]
 # Optional because SBX also installs the sizeable SB3/PyTorch trainer stack.
 # Torch serves SBX's host-side SB3 infrastructure here; uv selects its CPU wheel
 # below so it cannot inject CUDA 12 libraries beside JAX's CUDA 13 stack.

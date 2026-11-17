@@ -8,12 +8,12 @@ Camera frames from a Gaussian splat
 
 The gym simulates the physics in 2D and has a top-down renderer, but no camera. This
 adds one: camera frames rendered from a 3D Gaussian splat of a real track, so
-perception code can be developed and tested in the gym. The splat, the track geometry
-and the renderer come from
-`roboracer_3dgs_sim <https://github.com/YonVanom/roboracer_3dgs_sim>`_: a scene
-bundle is a splat of a real place (recorded with a car's camera and lidar) plus the
-track fitted to the same lidar map, in one world frame. The gym keeps doing all of the
-physics, LiDAR and collisions; the splat only provides the pictures.
+perception code can be developed and tested in the gym. A *scene bundle* (made with
+roboracer_3dgs_builder from a recording of a car's camera and lidar) is a splat of a
+real place plus the track fitted to the same lidar map, in one world frame. The gym
+keeps doing all of the physics, LiDAR and collisions; the splat only provides the
+pictures. The renderer is part of this package (``f1tenth_gym.envs.splat.renderer``,
+WebGPU); it reproduces 3DGUT, the splat's training renderer.
 
 .. list-table::
    :header-rows: 1
@@ -24,8 +24,8 @@ physics, LiDAR and collisions; the splat only provides the pictures.
    * - ``export_scene_track(scene, out_dir)``
      - Writes the scene's track as a gym map in the scene's world frame: the
        occupancy image (drivable floor free, the rest occupied), its YAML,
-       ``<name>_centerline.csv`` and ``<name>_raceline.csv`` (speeds from the
-       scene's expert profile).
+       ``<name>_centerline.csv`` and ``<name>_raceline.csv`` (speeds from
+       ``speed_profile``: lateral, braking and acceleration limits).
    * - ``SplatCameraWrapper(env, scene)``
      - After every ``reset``/``step``, renders each camera car's view from the splat
        and adds it to that car's observation as ``"image"`` (960 x 600 RGB,
@@ -35,18 +35,16 @@ physics, LiDAR and collisions; the splat only provides the pictures.
 Install
 -------
 
-The renderer is roboracer_3dgs_sim's (WebGPU via ``wgpu``: Vulkan, Metal, DirectX 12
-or a CPU fallback). Install it into the gym's environment without its own
-dependencies: it asks for ``opencv-python-headless``, which conflicts with the gym's
-``opencv-python``.
+The renderer needs ``wgpu`` (WebGPU: Vulkan, Metal, DirectX 12 or a CPU fallback),
+in the optional ``splat`` extra:
 
 .. code-block:: bash
 
-   uv sync
-   uv pip install "wgpu>=0.20"
-   uv pip install --no-deps -e /path/to/roboracer_3dgs_sim   # or the git URL
+   uv sync --extra splat
 
-The scene ``hallway_loop_2b`` is bundled with roboracer_3dgs_sim.
+Scenes and the car splat for the other cars are folders: pass their paths, or put them
+under ``$ROBORACER_DATA`` (default ``~/roboracer_data``) as ``scenes/<name>`` and
+``assets/<name>`` and pass the name. Without a car asset the other cars are not drawn.
 
 Use
 ---
